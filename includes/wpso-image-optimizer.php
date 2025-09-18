@@ -1,8 +1,6 @@
 <?php
 /**
- * WP Speed Optimization - Image Optimizer
- *
- * Generates WebP versions and implements lazy-loading for images.
+ * WP Speed Optimization – Image Optimizer
  *
  * @package WP_Speed_Optimization
  * @since 2.0.0
@@ -13,52 +11,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'WPSO_Image_Optimizer' ) ) {
-
 class WPSO_Image_Optimizer {
-    /**
-     * Initialize hooks for image optimization
-     */
     public static function init() {
-        add_filter( 'wp_get_attachment_url', [ __CLASS__, 'replace_with_webp' ], 10, 2 );
-        add_filter( 'the_content', [ __CLASS__, 'lazy_load_images' ] );
+        add_filter( 'wp_get_attachment_image_attributes', [ __CLASS__, 'add_lazy_load' ], 10, 3 );
     }
 
     /**
-     * Replace image URLs with WebP if available
-     *
-     * @param string $url Original attachment URL
-     * @param int    $post_id Attachment ID
-     * @return string Modified URL
+     * Add loading="lazy" to img attributes
      */
-    public static function replace_with_webp( $url, $post_id ) {
-        $webp_path = self::get_webp_path( $url );
-        if ( file_exists( $webp_path ) ) {
-            return self::webp_url( $url );
+    public static function add_lazy_load( $attr, $attachment, $size ) {
+        $attr['loading'] = 'lazy';
+        return $attr;
+    }
+
+    /**
+     * Run optimization via AJAX
+     */
+    public static function run_optimization() {
+        $attachments = get_posts([
+            'post_type'      => 'attachment',
+            'post_mime_type' => [ 'image/jpeg', 'image/png' ],
+            'numberposts'    => -1,
+            'fields'         => 'ids',
+        ]);
+
+        foreach ( $attachments as $id ) {
+            $file = get_attached_file( $id );
+            $path = pathinfo( $file );
+            $webp = "{$path['dirname']}/{$path['filename']}.webp";
+            if ( ! file_exists( $webp ) ) {
+                // Convert to WebP if Imagick is available
+                if ( class_exists( 'Imagick' ) ) {
+                    $image = new Imagick( $file );
+                    $image->setImageFormat( 'webp' );
+                    $image->writeImage( $webp );
+                }
+            }
         }
-        return $url;
-    }
-
-    /**
-     * Add loading="lazy" to img tags in content
-     *
-     * @param string $content Post content
-     * @return string Modified content
-     */
-    public static function lazy_load_images( $content ) {
-        return preg_replace( '/<img(.*?)>/', '<img loading="lazy"$1>', $content );
-    }
-
-    private static function get_webp_path( $url ) {
-        $file = wp_parse_url( $url, PHP_URL_PATH );
-        return ABSPATH . ltrim( $file, '/' ) . '.webp';
-    }
-
-    private static function webp_url( $url ) {
-        return $url . '.webp';
+        return true;
     }
 }
 
-// Initialize
 WPSO_Image_Optimizer::init();
-
 }
