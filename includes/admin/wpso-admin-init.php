@@ -2,7 +2,7 @@
 /**
  * WP Speed Optimization - Admin Initialization
  * 
- * Registers admin menus, pages, and assets
+ * Registers admin menus, pages, assets, and AJAX handlers
  * 
  * @package WP_Speed_Optimization
  * @since 2.0.0
@@ -96,13 +96,15 @@ class WPSO_Admin_Init {
             'wpso-admin-js',
             'wpsoAdmin',
             [
-                'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
-                'nonce'    => wp_create_nonce( 'wpso_admin_nonce' ),
-                'strings'  => [
-                    'clearCache'    => __( 'Clear Cache', 'wp-speed-optimization' ),
-                    'generateCss'   => __( 'Generate Critical CSS', 'wp-speed-optimization' ),
-                    'optimizeDb'    => __( 'Optimize Database', 'wp-speed-optimization' ),
-                    'testPerf'      => __( 'Test Performance', 'wp-speed-optimization' ),
+                'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'wpso_admin_nonce' ),
+                'strings' => [
+                    'clearCache'  => __( 'Clear Cache', 'wp-speed-optimization' ),
+                    'generateCss' => __( 'Generate Critical CSS', 'wp-speed-optimization' ),
+                    'optimizeJs'  => __( 'Optimize JavaScript', 'wp-speed-optimization' ),
+                    'optimizeImg' => __( 'Optimize Images', 'wp-speed-optimization' ),
+                    'optimizeDb'  => __( 'Optimize Database', 'wp-speed-optimization' ),
+                    'testPerf'    => __( 'Test Performance', 'wp-speed-optimization' ),
                 ],
             ]
         );
@@ -127,6 +129,7 @@ class WPSO_Admin_Init {
      */
     public static function render_tools_page() {
         require_once WPSO_DIR_PATH . 'includes/admin/wpso-admin-tools.php';
+        require_once WPSO_DIR_PATH . 'includes/admin/wpso-admin-ajax.php';
     }
 }
 
