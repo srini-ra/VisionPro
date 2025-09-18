@@ -273,14 +273,17 @@ class WP_Speed_Optimization {
         
         // Include admin files only in admin area
         if (is_admin()) {
-            $admin_includes = [
-                'includes/admin/wpso-admin-init.php',
-                'includes/admin/wpso-admin-settings.php',
-                'includes/admin/wpso-admin-dashboard.php',
-                'includes/admin/wpso-admin-tools.php'
-            ];
-            $includes = array_merge($includes, $admin_includes);
-        }
+    // Include admin files only in admin area
+    $admin_includes = [
+        'includes/admin/wpso-admin-init.php',
+        'includes/admin/wpso-admin-dashboard.php',
+        'includes/admin/wpso-admin-settings.php',
+        'includes/admin/wpso-admin-tools.php'
+    ];
+    foreach ($admin_includes as $file) {
+        require_once WPSO_DIR_PATH . $file;
+    }
+}
         
         foreach ($includes as $file) {
             $file_path = WPSO_DIR_PATH . $file;
