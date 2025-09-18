@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if ( ! class_exists( 'WPSO_Admin_Settings' ) ) {
 class WPSO_Admin_Init {
     public static function init() {
         add_action('admin_menu', [__CLASS__, 'add_admin_menus']);
@@ -91,3 +92,5 @@ class WPSO_Admin_Init {
 }
 
 WPSO_Admin_Init::init();
+} // end class
+} // end if
