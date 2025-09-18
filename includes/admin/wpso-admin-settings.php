@@ -12,7 +12,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class WPSO_Admin_Settings {
+if ( ! class_exists( 'WPSO_Admin_Settings' ) ) {
+    
+    class WPSO_Admin_Settings {
     private $settings;
 
     public function __construct($settings) {
@@ -53,3 +55,5 @@ class WPSO_Admin_Settings {
         <?php
     }
 }
+    } // end class
+} // end if
