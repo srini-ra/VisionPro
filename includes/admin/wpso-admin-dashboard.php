@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if ( ! class_exists( 'WPSO_Admin_Settings' ) ) {
 class WPSO_Admin_Dashboard {
     private $settings;
     private $cache_handler;
@@ -58,3 +59,5 @@ class WPSO_Admin_Dashboard {
         <?php
     }
 }
+    } // end class
+} // end if
