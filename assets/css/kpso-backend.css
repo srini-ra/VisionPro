@@ -1,0 +1,37 @@
+.admin-img
+{
+	height:70px;
+}
+
+.admin-title
+{
+	text-align:center;
+	font-size: 85px !important;
+	margin-top: 40px !important;
+}
+
+h2
+{
+	text-align:center;
+	font-size: 25px;
+}
+
+.kpftc-desc
+{
+	text-align:center;
+	border:2px dashed black;
+	padding:20px 90px 20px 90px;
+	margin:30px 20px 20px 0px;
+	font-size:22px;
+	line-height:30px;
+	border-radius:10px;
+}
+
+.notice, div.error, div.updated {
+    margin: 5px 18px 2px 0px !important;
+}
+
+kp-code-desc
+{
+	margin-bottom:2px;
+}
